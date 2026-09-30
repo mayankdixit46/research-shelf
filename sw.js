@@ -13,10 +13,10 @@
    offline anyway, because the files are already on her computer.)
 */
 
-const CACHE_NAME = 'research-shelf-v2';
+const CACHE_NAME = 'research-shelf-v3';
 const APP_FILES = [
   './', 'index.html', 'css/styles.css',
-  'js/db.js', 'js/app.js', 'js/library.js', 'js/seed.js', 'js/notes.js', 'js/files.js', 'js/themes.js',
+  'js/intro.js', 'js/db.js', 'js/app.js', 'js/library.js', 'js/seed.js', 'js/notes.js', 'js/files.js', 'js/themes.js',
   'js/questions.js', 'js/matrix.js', 'js/citations.js', 'js/backup.js', 'js/dashboard.js'
 ];
 

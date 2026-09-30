@@ -22,9 +22,32 @@
       var savedTheme = localStorage.getItem('theme');
       if (savedTheme) document.documentElement.dataset.theme = savedTheme;
     } catch (e) { /* storage blocked: just follow the computer's setting */ }
+    // The welcome animation plays once per visit: if it already played in
+    // this browser tab, hide it straight away (see js/intro.js)
+    try {
+      if (sessionStorage.getItem('introShown')) document.documentElement.classList.add('no-intro');
+    } catch (e) { /* storage blocked: the animation will just play */ }
   </script>
 </head>
 <body>
+  <!--
+    Welcome animation: "Achieve your Goal". It covers the screen for about
+    three seconds while the app loads underneath, then lifts away.
+    Tap or press any key to skip it. The movement is done in styles.css,
+    the timing in js/intro.js. aria-hidden: screen readers skip straight to the app.
+  -->
+  <div class="intro" id="intro" aria-hidden="true">
+    <div class="intro-inner">
+      <p class="intro-title">
+        <span class="intro-word">Achieve</span>
+        <span class="intro-word">your</span>
+        <span class="intro-word intro-goal">Goal</span>
+      </p>
+      <p class="intro-sub">📚 Research Shelf</p>
+    </div>
+    <p class="intro-skip">Tap anywhere to continue</p>
+  </div>
+
   <!-- "Skip link": lets keyboard users jump straight past the menu -->
   <a class="skip-link" href="#main">Skip to content</a>
 
@@ -69,6 +92,7 @@
     in the files above it. db.js and app.js come first because every
     screen needs them.
   -->
+  <script src="js/intro.js"></script>
   <script src="js/db.js"></script>
   <script src="js/app.js"></script>
   <script src="js/library.js"></script>

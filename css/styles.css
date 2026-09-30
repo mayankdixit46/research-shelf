@@ -477,6 +477,87 @@ label.btn { font-weight: 400; margin: 0; }
 .include-files { display: flex; align-items: flex-start; margin: .2rem 0 .6rem; }
 .include-files input { margin-top: .3rem; }
 
+/* --- Welcome animation: "Achieve your Goal" ---
+   Timeline (seconds): words rise in one after another (0.2 → 1.0),
+   a line draws under "Goal" (1.1 → 1.8), "Research Shelf" fades in (1.5),
+   then js/intro.js adds .intro-leave at 3.0 and the cover lifts away. */
+.intro {
+  position: fixed; inset: 0; z-index: 1000;
+  display: grid; place-items: center;
+  padding: 1.5rem;
+  background:
+    radial-gradient(ellipse at 50% 60%, var(--accent-soft), transparent 65%),
+    var(--bg);
+  cursor: pointer;
+  /* Exit: after the words fade (below), the cover slides up like a curtain */
+  transition: transform .75s cubic-bezier(.7, 0, .25, 1) .15s;
+}
+.no-intro .intro { display: none; }
+.intro-inner { text-align: center; transition: opacity .25s ease, transform .35s ease; }
+.intro-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: clamp(2.6rem, 10vw, 5.8rem);
+  line-height: 1.1;
+  color: var(--text);
+}
+/* Each word starts lower, blurred and invisible, then rises into place */
+.intro-word {
+  display: inline-block;
+  margin: 0 .12em;
+  opacity: 0;
+  transform: translateY(.55em);
+  filter: blur(8px);
+  animation: intro-rise .9s cubic-bezier(.2, .7, .2, 1) forwards;
+}
+.intro-word:nth-child(1) { animation-delay: .2s; }
+.intro-word:nth-child(2) { animation-delay: .45s; }
+.intro-word:nth-child(3) { animation-delay: .7s; }
+@keyframes intro-rise {
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+/* "Goal" in the accent colour, with a line that draws underneath */
+.intro-goal { position: relative; color: var(--accent); }
+.intro-goal::after {
+  content: "";
+  position: absolute; left: 4%; right: 4%; bottom: -.08em;
+  height: .09em; min-height: 3px;
+  border-radius: 999px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: intro-draw .7s cubic-bezier(.6, 0, .2, 1) 1.15s forwards;
+}
+@keyframes intro-draw { to { transform: scaleX(1); } }
+.intro-sub {
+  margin: 1.6rem 0 0;
+  font-size: clamp(1rem, 2.6vw, 1.25rem);
+  letter-spacing: .08em;
+  color: var(--muted);
+  opacity: 0;
+  animation: intro-fade .8s ease 1.5s forwards;
+}
+.intro-skip {
+  position: absolute; bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)); left: 0; right: 0;
+  margin: 0; text-align: center; font-size: .85rem; color: var(--muted);
+  opacity: 0;
+  animation: intro-fade .6s ease 1.8s forwards;
+}
+@keyframes intro-fade { to { opacity: 1; } }
+/* The exit: the words fade and lift a little, then the whole cover slides up, revealing the app */
+.intro.intro-leave { transform: translateY(-100%); pointer-events: none; box-shadow: 0 10px 30px rgba(0,0,0,.12); }
+.intro-leave .intro-inner { opacity: 0; transform: translateY(-.6rem); }
+.intro-leave .intro-skip { visibility: hidden; }
+
+/* Less motion (a computer setting some people need): no movement, just a gentle fade */
+@media (prefers-reduced-motion: reduce) {
+  .intro-word, .intro-sub, .intro-skip { animation: intro-fade .4s ease forwards; transform: none; filter: none; }
+  .intro-goal::after { animation: none; transform: scaleX(1); }
+  .intro { transition: opacity .3s ease; }
+  .intro.intro-leave { transform: none; opacity: 0; }
+}
+
 /* The [hidden] attribute should always hide things, whatever else is set */
 [hidden] { display: none !important; }
 
